@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>${groupId}.${rootArtifactId}</groupId>
+  <artifactId>${groupId}.${rootArtifactId}</artifactId>
+  <version>${version}-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>${rootArtifactId}</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <bundle.category>${rootArtifactId}</bundle.category>
+    <!-- Plugin versions -->
+    <maven-bundle-plugin.version>2.4.0</maven-bundle-plugin.version>
+    <maven-scr-plugin.version>1.20.0</maven-scr-plugin.version>
+    <pluginversions.javaver>1.8</pluginversions.javaver>
+    <maven-jar-plugin.version>2.5</maven-jar-plugin.version>
+
+    <!-- OSGi support versions -->
+    <scr.version>1.9.6</scr.version>
+    <config-admin.version>1.8.0</config-admin.version>
+    <log.version>1.0.1</log.version>
+    <jersey.version>2.11</jersey.version>
+
+    <!-- camel and netty versions -->
+    <camel.version>2.16.1</camel.version>
+    <netty.version>4.0.27.Final</netty.version>
+    <commons-pool.version>1.6</commons-pool.version>
+  </properties>
+
+  <modules>
+    <module>api</module>
+    <module>impl</module>
+  </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.scr.annotations</artifactId>
+      <version>${scr.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.configadmin</artifactId>
+      <version>${config-admin.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.log</artifactId>
+      <version>${log.version}</version>
+    </dependency>
+  </dependencies>
+
+<dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-core</artifactId>
+        <version>${camel.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-core-osgi</artifactId>
+        <version>${camel.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-scr</artifactId>
+        <version>${camel.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-netty4</artifactId>
+        <version>${camel.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-buffer</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-codec</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-common</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-handler</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-pool</groupId>
+        <artifactId>commons-pool</artifactId>
+        <version>${commons-pool.version}</version>
+      </dependency>
+    </dependencies>
+</dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.3</version>
+          <configuration>
+            <source>${pluginversions.javaver}</source>
+            <target>${pluginversions.javaver}</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+	  <version>${maven-jar-plugin.version}</version>
+        </plugin>
+	<plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-scr-plugin</artifactId>
+          <version>${maven-scr-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>generate-scr-scrdescriptor</id>
+              <goals>
+		<goal>scr</goal>
+              </goals>
+            </execution>
+          </executions>
+	</plugin>
+	<plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>${maven-bundle-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>bundle-manifest</id>
+              <phase>process-classes</phase>
+              <goals>
+                <goal>manifest</goal>
+              </goals>
+            </execution>
+          </executions>
+          <extensions>true</extensions>
+          <configuration>
+            <instructions>
+              <Bundle-Version>${project.version}</Bundle-Version>
+              <Bundle-Category>${bundle.category}</Bundle-Category>
+            </instructions>
+          </configuration>
+	</plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
